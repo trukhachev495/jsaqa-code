@@ -1,5 +1,15 @@
 {
+  "name": "jsaqa_3_2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "jest": "^29.7.0"
+    "@playwright/test": "^1.12.3",
+    "playwright": "^1.40.0"
   }
 }
