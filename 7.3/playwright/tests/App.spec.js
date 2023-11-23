@@ -20,47 +20,30 @@
 //     "https://netology.ru/programs/kak-perenesti-svoyo-delo-v-onlajn-bp"
 //   );
 // });
-import { chromium } from 'playwright'
-import { test, expect } from '@playwright/test'
-import { email, password } from './user'
-test('Successful authorization', async () => {
-  const browser = await chromium.launch({
-    headless: false,
-    slowMo: 500
-  })
-  const context = await browser.newContext()
-  const page = await context.newPage()
+import { test, expect } from '@playwright/test';
+import { email, password } from './user';
 
-  await page.goto('https://netology.ru/?modal=sign_in')
-  await page.getByPlaceholder('Email').click()
-  await page.getByPlaceholder('Email').fill(email)
-  await page.getByPlaceholder('Пароль').click()
-  await page.getByPlaceholder('Пароль').fill(password)
-  await page.getByTestId('login-submit-btn').click()
+test('Successful authorization', async ({ page }) => {
+  await page.goto('https://netology.ru/?modal=sign_in');
+  await page.click('[placeholder="Email"]');
+  await page.fill('[placeholder="Email"]', email);
+  await page.click('[placeholder="Пароль"]');
+  await page.fill('[placeholder="Пароль"]', password);
+  await page.click('[data-testid="login-submit-btn"]');
 
   await expect(page).toHaveURL('https://netology.ru/profile');
   const pageTitleLocator = page.locator('//*[text()="Моё обучение"]');
   await expect(pageTitleLocator).toHaveText('Моё обучение');
-  await context.close()
-  await browser.close()
-})
-test('Unsuccessful authorization', async () => {
-  const browser = await chromium.launch({
-    headless: false,
-    slowMo: 500
-  })
-  const context = await browser.newContext()
-  const page = await context.newPage()
+});
 
-  await page.goto('https://netology.ru/?modal=sign_in')
-  await page.getByPlaceholder('Email').click()
-  await page.getByPlaceholder('Email').fill("Invalidn.@gmail.com")
-  await page.getByPlaceholder('Пароль').click()
-  await page.getByPlaceholder('Пароль').fill("88!!88")
-  await page.getByTestId('login-submit-btn').click()
+test('Unsuccessful authorization', async ({ page }) => {
+  await page.goto('https://netology.ru/?modal=sign_in');
+  await page.click('[placeholder="Email"]');
+  await page.fill('[placeholder="Email"]', 'Invalidn.@gmail.com');
+  await page.click('[placeholder="Пароль"]');
+  await page.fill('[placeholder="Пароль"]', '88!!88');
+  await page.click('[data-testid="login-submit-btn"]');
 
   const pageTitleLocator = page.locator('//*[text()="Вы ввели неправильно логин или пароль"]');
   await expect(pageTitleLocator).toHaveText('Вы ввели неправильно логин или пароль');
-  await context.close()
-  await browser.close()
-})
+});
